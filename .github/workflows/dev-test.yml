@@ -1,0 +1,26 @@
+name: "run tests"
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    branches: [ develop ]
+
+concurrency:
+  group: ci-dev-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dev-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+
+      # 2. Run tests
+      - name: Run Unit Tests
+        run: go main_test.go
