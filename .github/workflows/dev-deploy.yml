@@ -1,0 +1,56 @@
+name: "deploy to dev"
+
+on:
+  pull_request:
+    types: [ closed ]
+    branches: [ develop ]
+
+env:
+  IMAGE_NAME: api
+
+concurrency:
+  group: ci-deploy-dev-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dev-deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    if: github.event.pull_request.merged == true
+    steps:
+      # 1. Setup
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+
+      # 2. Sets & print variables
+      - name: Sets variables
+        id: variables
+        run: |
+          # 1. Set vars
+          IMAGE_REGISTRY="juliopedrosa/webapp"
+          IMAGE_TAG="dev-${{ github.run_number }}"
+          
+          # 2. Set vars as env
+          echo "IMAGE_REGISTRY=$IMAGE_REGISTRY" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: Print variables
+        run: |
+          echo "IMAGE_TAG=$IMAGE_TAG"
+          echo "IMAGE_REGISTRY=$IMAGE_REGISTRY"
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image
+        run: docker build -t $IMAGE_REGISTRY:$IMAGE_TAG .
+
+      - name: Push image
+        run: docker push $IMAGE_REGISTRY:$IMAGE_TAG
