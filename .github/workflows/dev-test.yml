@@ -23,4 +23,4 @@ jobs:
 
       # 2. Run tests
       - name: Run Unit Tests
-        run: go main_test.go
+        run: go test main_test.go
