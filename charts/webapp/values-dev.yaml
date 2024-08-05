@@ -6,4 +6,4 @@ replicaCount: 1
 
 image:
   # Overrides the image tag whose default is the chart appVersion.
-  tag: dev-14
+  tag: dev-15
