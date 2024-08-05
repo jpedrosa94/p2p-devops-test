@@ -11,7 +11,7 @@ spec:
           - environment: stg
   template:
     metadata:
-      name: '{{environment}}-webapp'
+      name: '{{.environment}}-webapp'
     spec:
       project: default
       source:
@@ -22,11 +22,11 @@ spec:
           # Release name override (defaults to application name)
           releaseName: "{{appName}}"
           valueFiles:
-            - "values-{{environment}}.yaml"
+            - "values-{{.environment}}.yaml"
       destination:
         # Default base cluster
         name: in-cluster
-        namespace: "{{namespace}}"
+        namespace: "{{.environment}}"
       syncPolicy:
         automated:
           prune: true
