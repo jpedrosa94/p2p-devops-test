@@ -76,6 +76,22 @@ jobs:
       - name: Push image
         run: docker push $IMAGE_REGISTRY:$IMAGE_TAG
 
+      - name: Set variables
+        run: |
+          echo "FILE_PATH=charts/webapp/values-prod.yaml" >> $GITHUB_ENV
+
+      - name: Update image tag in YAML file
+        run: |
+          sed -i 's/^  tag: .*/  tag: '"${{ env.IMAGE_TAG }}"'/' ${{ env.FILE_PATH }}
+          cat charts/webapp/values-prod.yaml
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update image tag to ${{ env.IMAGE_TAG }}"
+          branch: master
+          file_pattern: ${{ env.FILE_PATH }}
+
   prod-create-release:
     needs: [ prod-deploy ]
     runs-on: ubuntu-latest
@@ -102,6 +118,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
+          RELEASE_VERSION=${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
           BRANCH_NAME="merge/$RELEASE_VERSION"
           git checkout -b $BRANCH_NAME
           
