@@ -29,7 +29,7 @@ jobs:
         run: |
           echo "FILE_PATH=charts/webapp/values-dev.yaml" >> $GITHUB_ENV
           echo "IMAGE_REGISTRY=juliopedrosa/webapp" >> $GITHUB_ENV
-          echo "IMAGE_TAG=dev-2" >> $GITHUB_ENV
+          echo "IMAGE_TAG=1.0.0" >> $GITHUB_ENV
           
       - name: Update image tag in YAML file
         run: |
