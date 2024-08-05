@@ -95,7 +95,7 @@ jobs:
           file_pattern: ${{ env.FILE_PATH }}
 
   prod-create-release:
-    needs: [ prod-deploy ]
+#    needs: [ prod-deploy ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -111,7 +111,7 @@ jobs:
           gh release create $RELEASE_VERSION --title "$RELEASE_VERSION" --generate-notes
 
   prod-create-pull-request:
-    needs: [ prod-deploy ]
+#    needs: [ prod-deploy ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
