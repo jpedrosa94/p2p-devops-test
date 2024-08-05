@@ -54,3 +54,15 @@ jobs:
 
       - name: Push image
         run: docker push $IMAGE_REGISTRY:$IMAGE_TAG
+
+#      - name: Update image tag in values file
+#        id: update_yaml
+#        run: |
+#          # Define variables
+#          FILE_PATH="path/to/your/file.yaml"
+#          IMAGE_NAME="your-image-name"
+#          NEW_TAG="new-tag"
+#
+#          # Update the YAML file
+#          sed -i "s|\(${IMAGE_NAME}:\)\([a-zA-Z0-9._-]*\)|\1${NEW_TAG}|" $FILE_PATH
+

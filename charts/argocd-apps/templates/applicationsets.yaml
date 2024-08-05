@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: webapp
+spec:
+  generators:
+    - list:
+        elements:
+          - environment: dev
+          - environment: prod
+          - environment: stg
+  template:
+    metadata:
+      name: '{{environment}}-webapp'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/jpedrosa94/p2p-devops-test.git
+        targetRevision: HEAD
+        path: charts/webapp
+        helm:
+          # Release name override (defaults to application name)
+          releaseName: "{{appName}}"
+          valueFiles:
+            - "values-{{environment}}.yaml"
+      destination:
+        # Default base cluster
+        name: in-cluster
+        namespace: "{{namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
