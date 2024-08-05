@@ -56,6 +56,8 @@ go run main.go
 
 ### CI-CD - GitFlow
 
+![screenshot](docs/images/gitflow.webp)
+
 ###### Long-lived branches
 
 - `origin/main`
@@ -63,19 +65,25 @@ go run main.go
 - `origin/develop`
    - Always reflects a state with the latest delivered development changes for the next release.
 
-###### Release
+##### Releasing Flow
 
 ```bash
 make release # from develop
 ```
-
-###### Hotfix
+##### Hotfix Flow
 
 ```bash
 make hotfix # from main
 ```
+
+1. From `develop` create a `feature/` branch
+2. Create a PR 
 ## Tech Debts
+- Create application registry on ECR
+- Image Security Checks
+- Set dynamically hard-coded registries and  
 - Move App of Apps setup to another repository.
 - Create NetworkPolicies to block traffic between namespace environments
 - Create script to handle MAJOR releases
 - Create a S3 bucket and DynamoDB table to manage statefile and lockfile
+- Notify Deployment on comunication channel
