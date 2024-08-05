@@ -13,8 +13,8 @@ spec:
     repoURL: https://github.com/jpedrosa94/p2p-devops-test.git
     targetRevision: {{ .Values.ref }}
   syncPolicy:
-    syncOptions:
-      - ApplyOutOfSyncOnly=true
+    automated:
+      prune: true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -31,5 +31,5 @@ spec:
     repoURL: https://github.com/jpedrosa94/p2p-devops-test.git
     targetRevision: {{ .Values.ref }}
   syncPolicy:
-    syncOptions:
-      - ApplyOutOfSyncOnly=true
+    automated:
+      prune: true
