@@ -34,5 +34,5 @@ jobs:
         id: update_yaml
         run: |
           # Update the YAML file
-          sed -i "s|\(${$IMAGE_REGISTRY}:\)\([a-zA-Z0-9._-]*\)|\1${IMAGE_TAG}|" $FILE_PATH
+          sed -i "s|\(${IMAGE_REGISTRY}:\)[a-zA-Z0-9._-]*|\1${IMAGE_TAG}|" $FILE_PATH
           cat charts/webapp/values-dev.yaml
