@@ -1,12 +1,13 @@
 
-# P2P DevOps Test
+# P2P DevOps Assessment
 
 This repository contains the infrastructure and application code for deploying a web application using Kubernetes.
 It's managed through ArgoCD for GitOps, and provisioned using Terraform.
 
 ## Structure
 
-- **`.github/workflows`**: GithubActions to manage CI and CD using.
+- **`.github/`**: Contains PR template and release.yml
+- **`.github/workflows/`**: GithubActions to manage CI and CD using.
 - **`charts/argocd-apps`**: Helm chart for ArgoCD Apps and AppSets.
 - **`charts/cluster-bootstrap`**: Helm chart for the required applications (e.g ALB Controller, External DNS, etc).
 - **`charts/webapp`**: Helm chart for the web application.
@@ -65,25 +66,54 @@ go run main.go
 - `origin/develop`
    - Always reflects a state with the latest delivered development changes for the next release.
 
-##### Releasing Flow
+##### Release Flow
 
+1. Go to `develop` branch and create a `feature/*` branch regarding your change
 ```bash
-make release # from develop
+git checkout -b feature/update-code
 ```
+2. Update the code and create PR to `develop` branch
+   1. It will run unit tests
+3. After that, you have to merge. The pipeline will execute:
+   1. Run unit tests
+   2. Run vulnerability checks
+   3. Build the development new image
+   4. Deploy in `dev`
+4. After check in `dev`, now you need to create a Release Candidate to be validated in a pre-prod environment
+   1. From `develop` branch follow the steps:
+      1. Create a ***release*** PR (This PR will be executed to `master`):
+      - The script will get the latest release version, calculate the release and branch name
+      ```bash
+      make release
+      ```
+   2. Pipeline will:
+      1. Run unit tests
+      2. Run vulnerability checks
+      3. Build the new release candidate image
+      4. Deploy in `stg` (pre-prod)
+   3. After check in `stg`, approve the merge and deploy in production
+5. In Production the Pipeline will trigger:
+   1. Run unit tests
+   2. Run vulnerability checks
+   3. Build the new release candidate image
+   4. Create a new Release on GitHub
+   5. And a PR to `develop` to synchronize `master` with `develop`
+
 ##### Hotfix Flow
 
+1. Go to `master` branch and run:
+- The Script will create a `hotfix/*` with any name that you choose and calculate hotfix version
 ```bash
-make hotfix # from main
+make hotfix
 ```
-
-1. From `develop` create a `feature/` branch
-2. Create a PR 
+2. Then, do your modification and push. It will deploy your change into non-prod environment performing the same checks as in RC pipeline
+3. After that, merge and a new release will be created and deployed in prod
 ## Tech Debts
-- Create application registry on ECR
-- Image Security Checks
-- Set dynamically hard-coded registries and  
+- Create IaC CI/CD pipeline
+- Create exclusive application registry on ECR
+- Set dynamically the hard-coded registries and  
 - Move App of Apps setup to another repository.
 - Create NetworkPolicies to block traffic between namespace environments
-- Create script to handle MAJOR releases
-- Create a S3 bucket and DynamoDB table to manage statefile and lockfile
-- Notify Deployment on comunication channel
+- Create script to handle ***semver*** releases
+- Create a S3 bucket and DynamoDB table to manage statefile and state lockfile
+- Notify Deployment in a communication channel
