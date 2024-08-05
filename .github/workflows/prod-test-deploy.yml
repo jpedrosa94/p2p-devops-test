@@ -1,9 +1,11 @@
 name: "run tests & deploy to prod"
 
 on:
-  pull_request:
-    types: [ closed ]
-    branches: [ master ]
+  workflow_dispatch:
+#on:
+#  pull_request:
+#    types: [ closed ]
+#    branches: [ master ]
 
 jobs:
   prod-test:
@@ -96,9 +98,13 @@ jobs:
     needs: [ prod-deploy ]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          token:  ${{ secrets.GH_TOKEN }}
+
       - name: Create release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN:  ${{ steps.app-token.outputs.token }}
         run: |
           git tag -a $RELEASE_VERSION -m "release: $RELEASE_VERSION"
           git push origin $RELEASE_VERSION
