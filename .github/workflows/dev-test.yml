@@ -30,9 +30,8 @@ jobs:
           echo "FILE_PATH=charts/webapp/values-dev.yaml" >> $GITHUB_ENV
           echo "IMAGE_REGISTRY=juliopedrosa/webapp" >> $GITHUB_ENV
           echo "IMAGE_TAG=dev-2" >> $GITHUB_ENV
-      - name: Update image tag in values file
-        id: update_yaml
+          
+      - name: Update image tag in YAML file
         run: |
-          # Update the YAML file
-          sed -i "s|\(${IMAGE_REGISTRY}:\)[a-zA-Z0-9._-]*|\1${IMAGE_TAG}|" $FILE_PATH
+          sed -i 's/^  tag: .*/  tag: '"${{ env.IMAGE_TAG }}"'/' ${{ env.FILE_PATH }}
           cat charts/webapp/values-dev.yaml
