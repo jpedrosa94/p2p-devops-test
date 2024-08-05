@@ -1,3 +1,4 @@
+# Every time a PR is opened/synchronized or re-opened to develop the workflow will be triggered
 name: "run tests"
 
 on:
