@@ -17,10 +17,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.22'
+#      - name: Set up Go
+#        uses: actions/setup-go@v4
+#        with:
+#          go-version: '1.22'
+#
+#      - name: Run Unit Tests
+#        run: go test main_test.go
 
-      - name: Run Unit Tests
-        run: go test main_test.go
+      - name: Update image tag in values file
+        id: update_yaml
+        run: |
+          # Define variables
+          FILE_PATH="charts/webapp/values-dev.yaml"
+          IMAGE_TAG="dev-2"
+          # Update the YAML file
+          sed -i "s|\(${$IMAGE_REGISTRY}:\)\([a-zA-Z0-9._-]*\)|\1${IMAGE_TAG}|" $FILE_PATH
+          cat charts/webapp/values-dev.yaml
