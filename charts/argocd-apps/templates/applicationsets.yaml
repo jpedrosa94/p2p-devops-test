@@ -3,6 +3,8 @@ kind: ApplicationSet
 metadata:
   name: webapp
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
   generators:
     - list:
         elements:
