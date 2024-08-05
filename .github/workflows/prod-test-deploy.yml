@@ -103,6 +103,7 @@ jobs:
         env:
           GITHUB_TOKEN:  ${{ secrets.GH_TOKEN }}
         run: |
+          git fetch --prune --prune-tags origin
           LATEST_TAG=$(git describe --tags "$(git rev-list --tags --max-count=1)")
           TAG_LIST=($(echo $LATEST_TAG | tr '.' ' '))
           [[ "${#TAG_LIST[@]}" -ne 2 ]] && echo "$RELEASE_VERSION is not a valid version" && exit 1
