@@ -99,9 +99,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
       - name: Create release
         env:
-          GITHUB_TOKEN:  ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git fetch --prune --prune-tags origin
           LATEST_TAG=$(git describe --tags "$(git rev-list --tags --max-count=1)")
@@ -124,7 +127,7 @@ jobs:
 
       - name: Open PR to align develop with master
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN ${{ secrets.GH_TOKEN }}
         run: |
           RELEASE_VERSION=${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
           BRANCH_NAME="merge/$RELEASE_VERSION"
