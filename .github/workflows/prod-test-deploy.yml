@@ -132,6 +132,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           RELEASE_VERSION=${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
+          git fetch --prune --prune-tags origin
+          git config --global user.email "release@local"
+          git config --global user.name "release[bot]"
+          LATEST_TAG=$(git describe --tags "$(git rev-list --tags --max-count=1)")
+          TAG_LIST=($(echo $LATEST_TAG | tr '.' ' '))
+          [[ "${#TAG_LIST[@]}" -ne 2 ]] && echo "$RELEASE_VERSION is not a valid version" && exit 1
+          RELEASE_VERSION=$(( TAG_LIST[0] + 1 )).0
           BRANCH_NAME="merge/$RELEASE_VERSION"
           git checkout -b $BRANCH_NAME
           
