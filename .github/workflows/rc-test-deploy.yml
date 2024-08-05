@@ -46,7 +46,7 @@ jobs:
           # 2. Set release version
           if [[ "$GITHUB_HEAD_REF" == release* ]]
           then
-            RELEASE_VERSION=$(( TAG_LIST[0] + 1 )).0;
+            RELEASE_VERSION=$(( TAG_LIST[0] + 1 )).$(( TAG_LIST[2] ));
           else
             RELEASE_VERSION=${TAG_LIST[0]}.$(( TAG_LIST[1] + 1));
           fi
@@ -73,3 +73,19 @@ jobs:
 
       - name: Push image
         run: docker push $IMAGE_REGISTRY:$IMAGE_TAG
+
+      - name: Set variables
+        run: |
+          echo "FILE_PATH=charts/webapp/values-stg.yaml" >> $GITHUB_ENV
+
+      - name: Update image tag in YAML file
+        run: |
+          sed -i 's/^  tag: .*/  tag: '"${{ env.IMAGE_TAG }}"'/' ${{ env.FILE_PATH }}
+          cat charts/webapp/values-stg.yaml
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update image tag to ${{ env.IMAGE_TAG }}"
+          branch: master
+          file_pattern: ${{ env.FILE_PATH }}
