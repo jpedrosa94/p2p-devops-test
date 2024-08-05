@@ -10,6 +10,7 @@ resource "helm_release" "argocd" {
   values = [templatefile("./helm-values/argocd_values.yaml", {})]
 }
 
+# Self-reference to ArgoCD on first deployment
 resource "helm_release" "argocd-apps" {
   name             = "argocd-apps"
   namespace        = "argocd"
