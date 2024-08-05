@@ -19,19 +19,17 @@ jobs:
 
     if: github.event.pull_request.merged == true
     steps:
-      # 1. Setup
       - uses: actions/checkout@v4
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: '1.22'
 
-      # 2. Sets & print variables
       - name: Sets variables
         id: variables
         run: |
           # 1. Set vars
-          IMAGE_REGISTRY="juliopedrosa/webapp"
+            IMAGE_REGISTRY="juliopedrosa/webapp"
           IMAGE_TAG="dev-${{ github.run_number }}"
 
           # 2. Set vars as env
