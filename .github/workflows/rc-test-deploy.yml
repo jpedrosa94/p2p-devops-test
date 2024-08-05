@@ -56,6 +56,7 @@ jobs:
           
           # 4. Set var as env
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "IMAGE_REGISTRY=${{ vars.IMAGE_REGISTRY }}" >> $GITHUB_ENV
 
       - name: Print variables
         run: |
