@@ -7,10 +7,3 @@ replicaCount: 1
 image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "dev-2"
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
