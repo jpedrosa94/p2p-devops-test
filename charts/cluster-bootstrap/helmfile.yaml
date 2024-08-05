@@ -9,7 +9,7 @@ repositories:
   - name: metrics-server
     url: https://kubernetes-sigs.github.io/metrics-server/
 
-    releases:
+releases:
 #      - name: karpenter
 #        chart: karpenter/karpenter
 #        version: "v0.32.4"
@@ -24,7 +24,7 @@ repositories:
 #        values:
 #          - values/alb.yaml
 
-      - name: metrics-server
-        chart: metrics-server/metrics-server
-        version: "3.11.0"
-        namespace: monitoring
+  - name: metrics-server
+    chart: metrics-server/metrics-server
+    version: "3.11.0"
+    namespace: monitoring
