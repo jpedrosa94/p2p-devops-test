@@ -12,9 +12,9 @@ spec:
     path: charts/argocd-apps
     repoURL: https://github.com/jpedrosa94/p2p-devops-test.git
     targetRevision: {{ .Values.ref }}
-  syncPolicy:
-    automated:
-      prune: true
+#  syncPolicy:
+#    automated:
+#      prune: true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
