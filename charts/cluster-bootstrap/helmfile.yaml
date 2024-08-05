@@ -1,0 +1,30 @@
+repositories:
+#  - name: karpenter
+#    url: public.ecr.aws/karpenter
+#    oci: true
+#  - name: eks
+#    url: https://aws.github.io/eks-charts
+#  - name: external-dns
+#    url: https://kubernetes-sigs.github.io/external-dns
+  - name: metrics-server
+    url: https://kubernetes-sigs.github.io/metrics-server/
+
+    releases:
+#      - name: karpenter
+#        chart: karpenter/karpenter
+#        version: "v0.32.4"
+#        namespace: karpenter
+#        values:
+#          - values/karpenter.yaml
+#
+#      - name: alb-ingress
+#        chart: eks/aws-load-balancer-controller
+#        version: "1.4.1"
+#        namespace: alb-ingress
+#        values:
+#          - values/alb.yaml
+
+      - name: metrics-server
+        chart: metrics-server/metrics-server
+        version: "3.11.0"
+        namespace: monitoring
