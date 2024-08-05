@@ -35,3 +35,10 @@ jobs:
         run: |
           sed -i 's/^  tag: .*/  tag: '"${{ env.IMAGE_TAG }}"'/' ${{ env.FILE_PATH }}
           cat charts/webapp/values-dev.yaml
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update image tag to ${{ env.IMAGE_TAG }}"
+          branch: master
+          file_pattern: ${{ env.FILE_PATH }}
