@@ -31,5 +31,7 @@ spec:
     repoURL: https://github.com/jpedrosa94/p2p-devops-test.git
     targetRevision: {{ .Values.ref }}
   syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
     automated:
       prune: true
