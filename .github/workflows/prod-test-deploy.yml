@@ -129,7 +129,7 @@ jobs:
 
       - name: Open PR to align develop with master
         env:
-          GITHUB_TOKEN ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           RELEASE_VERSION=${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
           BRANCH_NAME="merge/$RELEASE_VERSION"
