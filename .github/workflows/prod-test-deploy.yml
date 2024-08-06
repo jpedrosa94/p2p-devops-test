@@ -1,10 +1,9 @@
 name: "run tests & deploy to prod"
 
-on: workflow_dispatch
-#on:
-#  pull_request:
-#    types: [ closed ]
-#    branches: [ master ]
+on:
+  pull_request:
+    types: [ closed ]
+    branches: [ master ]
 
 jobs:
   test:
@@ -66,48 +65,48 @@ jobs:
           echo "RELEASE_VERSION=${RELEASE_VERSION}" >> $GITHUB_OUTPUT
           
           echo $GITHUB_OUTPUT
-#      - name: Print variables
-#        run: |
-#          echo "IMAGE_TAG=$IMAGE_TAG"
-#          echo "IMAGE_REGISTRY=$IMAGE_REGISTRY"
-#
-#      - name: Log in to Docker Hub
-#        uses: docker/login-action@v2
-#        with:
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_TOKEN }}
-#
-#      - name: Build image
-#        run: docker build -t $IMAGE_REGISTRY:$IMAGE_TAG .
-#
-#      - name: Run Trivy vulnerability scanner
-#        uses: aquasecurity/trivy-action@0.20.0
-#        with:
-#          image-ref: 'docker.io/${{ env.IMAGE_REGISTRY }}:${{ env.IMAGE_TAG }}'
-#          format: 'table'
-#          exit-code: '1'
-#          ignore-unfixed: true
-#          vuln-type: 'os,library'
-#          severity: 'CRITICAL,HIGH'
-#
-#      - name: Push image
-#        run: docker push $IMAGE_REGISTRY:$IMAGE_TAG
-#
-#      - name: Set variables
-#        run: |
-#          echo "FILE_PATH=charts/webapp/values-prod.yaml" >> $GITHUB_ENV
-#
-#      - name: Update image tag in YAML file
-#        run: |
-#          sed -i 's/^  tag: .*/  tag: '"${{ env.IMAGE_TAG }}"'/' ${{ env.FILE_PATH }}
-#          cat charts/webapp/values-prod.yaml
-#
-#      - name: Commit and push changes
-#        uses: stefanzweifel/git-auto-commit-action@v4
-#        with:
-#          commit_message: "Update image tag to ${{ env.IMAGE_TAG }}"
-#          branch: master
-#          file_pattern: ${{ env.FILE_PATH }}
+      - name: Print variables
+        run: |
+          echo "IMAGE_TAG=$IMAGE_TAG"
+          echo "IMAGE_REGISTRY=$IMAGE_REGISTRY"
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image
+        run: docker build -t $IMAGE_REGISTRY:$IMAGE_TAG .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'docker.io/${{ env.IMAGE_REGISTRY }}:${{ env.IMAGE_TAG }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Push image
+        run: docker push $IMAGE_REGISTRY:$IMAGE_TAG
+
+      - name: Set variables
+        run: |
+          echo "FILE_PATH=charts/webapp/values-prod.yaml" >> $GITHUB_ENV
+
+      - name: Update image tag in YAML file
+        run: |
+          sed -i 's/^  tag: .*/  tag: '"${{ env.IMAGE_TAG }}"'/' ${{ env.FILE_PATH }}
+          cat charts/webapp/values-prod.yaml
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update image tag to ${{ env.IMAGE_TAG }}"
+          branch: master
+          file_pattern: ${{ env.FILE_PATH }}
 
   create-release:
     needs: [ deploy ]
@@ -120,13 +119,13 @@ jobs:
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          RELEASE_VERSION: ${{ needs.deploy.outputs.RELEASE_VERSION }}
         run: |
-          echo ${{ needs.deploy.outputs.RELEASE_VERSION }}
-#          git config --global user.email "bot@local"
-#          git config --global user.name "release[bot]"
-#          git tag -a $RELEASE_VERSION -m "release: $RELEASE_VERSION"
-#          git push origin $RELEASE_VERSION
-#          gh release create $RELEASE_VERSION --title "$RELEASE_VERSION" --generate-notes
+          git config --global user.email "bot@local"
+          git config --global user.name "release[bot]"
+          git tag -a $RELEASE_VERSION -m "release: $RELEASE_VERSION"
+          git push origin $RELEASE_VERSION
+          gh release create $RELEASE_VERSION --title "$RELEASE_VERSION" --generate-notes
 
   create-pull-request:
     needs: [ deploy ]
@@ -143,32 +142,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           RELEASE_VERSION: ${{ needs.deploy.outputs.RELEASE_VERSION }}
         run: |
-          echo "${{ needs.deploy.outputs.RELEASE_VERSION }}"
-#          BRANCH_NAME="merge/$RELEASE_VERSION"
-#          git checkout -b $BRANCH_NAME
-#
-#          git merge origin/master
-#          git commit --allow-empty -am "Merge master into develop"
-#          git push origin "$BRANCH_NAME"
-#
-#          gh pr create --base develop --head "$BRANCH_NAME" --title "Merge - $RELEASE_VERSION" --fill
+          BRANCH_NAME="merge/$RELEASE_VERSION"
+          git checkout -b $BRANCH_NAME
 
-#  job1:
-#    runs-on: ubuntu-latest
-#    # Map a step output to a job output
-#    outputs:
-#      output1: ${{ steps.step1.outputs.test }}
-#      output2: ${{ steps.step2.outputs.test }}
-#    steps:
-#      - id: step1
-#        run: echo "test=hello" >> "$GITHUB_OUTPUT"
-#      - id: step2
-#        run: echo "test=world" >> "$GITHUB_OUTPUT"
-#  job2:
-#    runs-on: ubuntu-latest
-#    needs: job1
-#    steps:
-#      - env:
-#          OUTPUT1: ${{needs.job1.outputs.output1}}
-#          OUTPUT2: ${{needs.job1.outputs.output2}}
-#        run: echo ${{needs.job1.outputs.output1}} ${{needs.job1.outputs.output2}}
+          git merge origin/master
+          git commit --allow-empty -am "Merge master into develop"
+          git push origin "$BRANCH_NAME"
+
+          gh pr create --base develop --head "$BRANCH_NAME" --title "Merge - $RELEASE_VERSION" --fill
