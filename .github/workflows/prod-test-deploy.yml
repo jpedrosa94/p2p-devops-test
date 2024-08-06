@@ -116,9 +116,10 @@ jobs:
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          RELEASE_VERSION: ${{ steps.prod-deploy.outputs.RELEASE_VERSION }}
+          RELEASE_VERSION: ${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
         run: |
           echo $RELEASE_VERSION
+          echo ${{ needs.prod-deploy.outputs }}
 #          git config --global user.email "bot@local"
 #          git config --global user.name "release[bot]"
 #          git tag -a $RELEASE_VERSION -m "release: $RELEASE_VERSION"
@@ -138,9 +139,11 @@ jobs:
       - name: Open PR to align develop with master
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          RELEASE_VERSION: ${{ steps.prod-deploy.outputs.RELEASE_VERSION }}
+          RELEASE_VERSION: ${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
         run: |
           echo $RELEASE_VERSION
+          echo ${{ needs.prod-deploy.outputs }}
+
 #          BRANCH_NAME="merge/$RELEASE_VERSION"
 #          git checkout -b $BRANCH_NAME
 #
