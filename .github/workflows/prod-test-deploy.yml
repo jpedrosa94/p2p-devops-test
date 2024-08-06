@@ -143,7 +143,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           RELEASE_VERSION: ${{ needs.deploy.outputs.RELEASE_VERSION }}
         run: |
-          echo "${{ needs.prod\-deploy.outputs.RELEASE_VERSION }}"
+          echo "${{ needs.deploy.outputs.RELEASE_VERSION }}"
 #          BRANCH_NAME="merge/$RELEASE_VERSION"
 #          git checkout -b $BRANCH_NAME
 #
