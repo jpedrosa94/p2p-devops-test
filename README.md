@@ -111,6 +111,7 @@ make hotfix
 3. After that, merge and a new release will be created and deployed in prod
 ## Tech Debts
 - Manage ArgoCD secrets using a secret manager/vault
+- Setup Ingress/DNS for ArgoCD
 - Create IaC CI/CD pipeline
 - Create exclusive application registry on ECR
 - Set dynamically the hard-coded registries and  
