@@ -8,5 +8,5 @@ image:
   repository: juliopedrosa/webapp
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 2.0-2b08-rc
+  tag: 2.1-4f01-rc
 
