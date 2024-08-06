@@ -25,6 +25,8 @@ jobs:
 #    needs: [ prod-test ]
     runs-on: ubuntu-latest
     environment: prod
+    outputs:
+      output: ${{ steps.variables.outputs.test }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -61,7 +63,7 @@ jobs:
           echo $RELEASE_VERSION
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
           
-          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_OUTPUT
+          echo "RELEASE_VERSION='$RELEASE_VERSION'" >> $GITHUB_OUTPUT
 
 #      - name: Print variables
 #        run: |
@@ -117,10 +119,8 @@ jobs:
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          RELEASE_VERSION: ${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
         run: |
-          echo $RELEASE_VERSION
-          echo ${{ needs.prod-deploy.outputs }}
+          echo ${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
 #          git config --global user.email "bot@local"
 #          git config --global user.name "release[bot]"
 #          git tag -a $RELEASE_VERSION -m "release: $RELEASE_VERSION"
@@ -142,9 +142,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           RELEASE_VERSION: ${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
         run: |
-          echo $RELEASE_VERSION
-          echo ${{ needs.prod-deploy.outputs }}
-
+          echo ${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
 #          BRANCH_NAME="merge/$RELEASE_VERSION"
 #          git checkout -b $BRANCH_NAME
 #
