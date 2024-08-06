@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     outputs:
-      output: ${{ steps.variables.outputs.release_version }}
+      RELEASE_VERSION: ${{ steps.variables.outputs.RELEASE_VERSION }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
