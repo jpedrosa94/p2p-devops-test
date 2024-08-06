@@ -27,14 +27,14 @@ message ">>> Starting hotfix"
 
 gh auth status
 
-# 1. Make sure branch is set to main
-[[ $(git rev-parse --abbrev-ref HEAD) != "main" ]] && echo "ERROR: Checkout to main" && exit 1
+# 1. Make sure branch is set to master
+[[ $(git rev-parse --abbrev-ref HEAD) != "master" ]] && echo "ERROR: Checkout to master" && exit 1
 
 # 2. Make sure branch is clean
 [[ $(git status --porcelain) ]] && echo "ERROR: The branch is not clean, commit your changes before creating the release" && exit 1
 
-message ">>> Pulling main"
-git pull origin main
+message ">>> Pulling master"
+git pull origin master
 message ">>> Pulling tags"
 git fetch --prune --tags
 
@@ -49,11 +49,11 @@ read -r -p "What is the name of the branch you want to create (should start with
 read -r -p "Are you sure you want to create the branch '$BRANCH_NAME' [Y/n]:  " RESPONSE
 if [[ $RESPONSE =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
-  message ">>>>> Creating branch '$BRANCH_NAME' from main..."
-  git checkout -b "$BRANCH_NAME" main
+  message ">>>>> Creating branch '$BRANCH_NAME' from master..."
+  git checkout -b "$BRANCH_NAME" master
   git commit --allow-empty -m "Hotfix - $RELEASE_VERSION"
   git push origin "$BRANCH_NAME"
-  gh pr create --base main --head "$BRANCH_NAME" --title "Hotfix - $RELEASE_VERSION" --fill
+  gh pr create --base master --head "$BRANCH_NAME" --title "Hotfix - $RELEASE_VERSION" --fill
 
 else
 
