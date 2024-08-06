@@ -124,5 +124,6 @@ make hotfix
 - Create security polices to manage the cluster
 - Sign container image with Cosign
 - Cluster and App monitoring
+- Setup Autoscaler tool (Karpenter or Autoscaler)
 
 
