@@ -121,3 +121,8 @@ make hotfix
 - Create a S3 bucket and DynamoDB table to manage statefile and state lockfile
 - Notify Deployment in a communication channel
 - Implement pre-commit
+- Create security polices to manage the cluster
+- Sign container image with Cosign
+- Cluster and App monitoring
+
+
