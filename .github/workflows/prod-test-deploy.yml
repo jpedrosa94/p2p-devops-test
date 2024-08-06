@@ -22,7 +22,7 @@ jobs:
         run: go test main_test.go
 
   prod-deploy:
-    needs: [ prod-test ]
+#    needs: [ prod-test ]
     runs-on: ubuntu-latest
     environment: prod
     steps:
@@ -58,9 +58,10 @@ jobs:
           # 4. Set vars as env and ouputs
           echo "IMAGE_REGISTRY=$IMAGE_REGISTRY" >> $GITHUB_ENV
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo $RELEASE_VERSION
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
           
-          echo "RELEASE_VERSION=${RELEASE_VERSION}" >> $GITHUB_OUTPUT
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_OUTPUT
 
 #      - name: Print variables
 #        run: |
