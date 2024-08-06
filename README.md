@@ -117,3 +117,4 @@ make hotfix
 - Create script to handle ***semver*** releases
 - Create a S3 bucket and DynamoDB table to manage statefile and state lockfile
 - Notify Deployment in a communication channel
+- Implement pre-commit
