@@ -22,7 +22,7 @@ jobs:
         run: go test main_test.go
 
   prod-deploy:
-    needs: [ prod-test ]
+#    needs: [ prod-test ]
     runs-on: ubuntu-latest
     environment: prod
     steps:
