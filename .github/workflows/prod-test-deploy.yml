@@ -24,6 +24,8 @@ jobs:
     needs: [ prod-test ]
     runs-on: ubuntu-latest
     environment: prod
+    outputs:
+      RELEASE_VERSION: ${{ steps.variables.outputs.RELEASE_VERSION }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -54,11 +56,15 @@ jobs:
           IMAGE_REGISTRY="${{ vars.IMAGE_REGISTRY }}"
           IMAGE_TAG=${RELEASE_VERSION}-$(git rev-parse --short=4 HEAD)
           
-          # 4. Set vars as env
+          # 4. Set vars as env and ouputs
           echo "IMAGE_REGISTRY=$IMAGE_REGISTRY" >> $GITHUB_ENV
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo $RELEASE_VERSION
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
-
+          
+          echo "RELEASE_VERSION=${RELEASE_VERSION}" >> $GITHUB_OUTPUT
+          
+          echo $GITHUB_OUTPUT
       - name: Print variables
         run: |
           echo "IMAGE_TAG=$IMAGE_TAG"
@@ -76,7 +82,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: 'docker.io/$IMAGE_REGISTRY:$IMAGE_TAG'
+          image-ref: 'docker.io/${{ env.IMAGE_REGISTRY }}:${{ env.IMAGE_TAG }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -102,7 +108,7 @@ jobs:
           branch: master
           file_pattern: ${{ env.FILE_PATH }}
 
-  prod-create-release:
+  create-release:
     needs: [ prod-deploy ]
     runs-on: ubuntu-latest
     steps:
@@ -113,13 +119,15 @@ jobs:
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          RELEASE_VERSION: ${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
         run: |
-          RELEASE_VERSION=$(( TAG_LIST[0] + 1 )).0
+          git config --global user.email "bot@local"
+          git config --global user.name "release[bot]"
           git tag -a $RELEASE_VERSION -m "release: $RELEASE_VERSION"
           git push origin $RELEASE_VERSION
           gh release create $RELEASE_VERSION --title "$RELEASE_VERSION" --generate-notes
 
-  prod-create-pull-request:
+  create-pull-request:
     needs: [ prod-deploy ]
     runs-on: ubuntu-latest
     steps:
@@ -132,13 +140,14 @@ jobs:
       - name: Open PR to align develop with master
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          RELEASE_VERSION: ${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
         run: |
-          RELEASE_VERSION=${{ needs.prod-deploy.outputs.RELEASE_VERSION }}
           BRANCH_NAME="merge/$RELEASE_VERSION"
           git checkout -b $BRANCH_NAME
-  
+          git config --global user.email "bot@local"
+          git config --global user.name "release[bot]"
           git merge origin/master
           git commit --allow-empty -am "Merge master into develop"
           git push origin "$BRANCH_NAME"
-          
+
           gh pr create --base develop --head "$BRANCH_NAME" --title "Merge - $RELEASE_VERSION" --fill
