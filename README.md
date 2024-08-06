@@ -97,7 +97,8 @@ git checkout -b feature/update-code
    2. Run vulnerability checks
    3. Build the new release candidate image
    4. Create a new Release on GitHub
-   5. And a PR to `develop` to synchronize `master` with `develop`
+   5. And create a PR to synchronize `master` with `develop`
+6. Merge the PR creted
 
 ##### Hotfix Flow
 
@@ -109,6 +110,7 @@ make hotfix
 2. Then, do your modification and push. It will deploy your change into non-prod environment performing the same checks as in RC pipeline
 3. After that, merge and a new release will be created and deployed in prod
 ## Tech Debts
+- Manage ArgoCD secrets using a secret manager/vault
 - Create IaC CI/CD pipeline
 - Create exclusive application registry on ECR
 - Set dynamically the hard-coded registries and  
