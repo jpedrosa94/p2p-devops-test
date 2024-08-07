@@ -111,12 +111,12 @@ make hotfix
 3. After that, merge and a new release will be created and deployed in prod
 ## Tech Debts
 - Manage ArgoCD secrets using a secret manager/vault
-- Setup Ingress/DNS for ArgoCD
+- Setup Ingress for ArgoCD
 - Create IaC CI/CD pipeline
 - Create exclusive application registry on ECR
 - Set dynamically the hard-coded registries and  
 - Move App of Apps setup to another repository.
-- Create NetworkPolicies to block traffic between namespace environments
+- Implement Zero-trust 
 - Create script to handle ***semver*** releases
 - Create a S3 bucket and DynamoDB table to manage statefile and state lockfile
 - Notify Deployment in a communication channel
